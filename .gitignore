@@ -1,0 +1,19 @@
+# C++
+engine/build/
+*.o
+*.dylib
+*.so
+compile_commands.json
+
+# Java
+api/build/
+api/.gradle/
+*.class
+*.db
+*.mv.db
+
+# Editors and OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
