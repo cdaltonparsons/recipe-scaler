@@ -1,6 +1,6 @@
 # Roadmap
 
-Each milestone is one `/build-feature` run.
+Each milestone is one `/build-milestone` run on its own branch, with one commit per task and one pull request into `main`.
 
 1. **Skeleton.** Empty C++ library and Spring Boot app that both build, a `check.sh` that runs both, and GitHub Actions CI running both test suites.
 2. **Fractions (C++).** An exact fraction type: add, multiply, simplify, mixed numbers like "1 1/2".

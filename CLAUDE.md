@@ -4,7 +4,7 @@ A recipe scaler with a Java API and a C++ math engine. The app is real, but the 
 
 ## How work happens here
 
-Features are built with the `/build-feature` command, which runs the subagents in `~/.claude/agents/`:
+Milestones are built with the project's `/build-milestone` command (`.claude/commands/build-milestone.md`), which runs the subagents in `~/.claude/agents/` and pauses after each approved task for Charlie to commit:
 
 - `planner` breaks a feature into small tasks. When a feature touches both halves, the first task is always the contract: the C++ header function and the matching Java interface.
 - `implementer` writes application code for one task, in one half (`engine/` or `api/`)
@@ -16,6 +16,8 @@ Once a contract task is approved, the `engine/` and `api/` tasks can run in para
 
 The human (Charlie) reviews every change in their IDE and makes every commit. **No agent ever runs `git commit`, `git push`, or opens a pull request.**
 
+Git workflow: one branch per roadmap milestone (for example `feature/fractions`), one commit per approved task, and one pull request per milestone into `main`. Agents assume the working tree is clean at the start of each task, so `git diff` shows only the current task.
+
 Each feature run is written up in `docs/agent-log/`. The planned features are in `docs/ROADMAP.md`.
 
 ## Stack
@@ -26,6 +28,18 @@ Each feature run is written up in `docs/agent-log/`. The planned features are in
 - Java calls the C++ library through the Foreign Function and Memory API (`java.lang.foreign`). Do not use JNI.
 - The engine exposes a plain C interface (`extern "C"`) in `engine/include/` so Java can call it. C++ types stay inside the library.
 - Data layer: Spring Data JPA with an embedded H2 database. Single user, no login.
+- CI: GitHub Actions on `ubuntu-latest`. Development happens on macOS (Apple Silicon). The engine builds as `libengine.dylib` on macOS and `libengine.so` on Linux, so anything that loads it (`EngineBridge`, Gradle config) must handle both.
+
+## Versions
+
+These are newer than some agents' training data. Use exactly these, and do not downgrade to versions you remember.
+
+- Java 25 (Temurin). Set the Gradle toolchain to 25.
+- Spring Boot 4.1.2 (Spring Framework 7, Jakarta EE 11). Not 3.x.
+- Gradle 9.9.0 through the wrapper (`gradle wrapper --gradle-version 9.9.0`). Use the Kotlin DSL (`build.gradle.kts`).
+- C++20 and CMake 3.28 or newer (`cmake_minimum_required(VERSION 3.28)`). Charlie has CMake 4.4 installed.
+- GoogleTest 1.18.0, fetched with `FetchContent`.
+- Compiler: Apple clang on macOS, the default GCC or Clang in CI. clang-format and clang-tidy are LLVM 23.
 
 ## Commands
 

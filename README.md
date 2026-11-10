@@ -57,5 +57,5 @@ cd api && ./gradlew bootRun        # http://localhost:8080
 To build a feature with the agent team, open the project in Claude Code and run:
 
 ```
-/build-feature <describe the feature>
+/build-milestone <milestone number from docs/ROADMAP.md, or describe the feature>
 ```
